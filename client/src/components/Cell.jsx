@@ -10,6 +10,12 @@ const StyledCell = styled.div`
     ${props => props.isTraveled && css`background-color:pink` }
     ${props => props.isPlayer2 && css`background-color:#00FFFF`}
     ${props => props.isTraveled2 && css`background-color:skyblue` }
+
+    ${props => props.isPlayer && css`border-radius: 3px` }
+    ${props => props.isTraveled && css`border-radius:0` }
+    ${props => props.isPlayer2 && css`border-radius: 3px`}
+    ${props => props.isTraveled2 && css`border-radius:0` }
+    
 `
 
 class Cell extends React.Component {
@@ -35,20 +41,29 @@ class Cell extends React.Component {
         if (prevProps.player !== this.props.player) {
             this.isCellPlayer();
         }
-    }
 
+        if (prevProps.restart !== this.props.restart) {
+            this.setState({
+                isTraveled: false,
+                isTraveled2: false,
+                isPlayer: false,
+                isPlayer2: false
+            })
+        }
+    }
+    
     playerPosition() {
         return this.props.player[0]
     }
-
+    
     player2Position() {
         return this.props.player2[0]
     }
-
+    
     currentPosition() {
         return [this.props.x, this.props.y];
     }
-
+    
     contains(player, cell) {
         let equals = true;
         for (var i = 0; i < player.length; i++) {
@@ -56,7 +71,7 @@ class Cell extends React.Component {
         }
         return equals;
     }
-
+    
     isCellPlayer(){
         if (this.contains(this.playerPosition(), this.currentPosition()) && !this.state.isPlayer) {
             this.setState({ isPlayer: true })
@@ -79,7 +94,8 @@ class Cell extends React.Component {
                 isTraveled={this.state.isTraveled}
                 isTraveled2={this.state.isTraveled2}
                 isPlayer={this.state.isPlayer}
-                isPlayer2={this.state.isPlayer2}>
+                isPlayer2={this.state.isPlayer2}
+                restart={this.props.restart}>
             </StyledCell>
         )
     }

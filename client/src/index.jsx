@@ -18,20 +18,35 @@ font-family:Tron;
 const Victory1 = styled.div`
 margin-top: 10px;
 color: white;
-${props => !props.player1Win && css`display: none`}
+${props => !props.player1Win && css`display: none`};
+flex-direction:column;
 `
 
 const Victory2 = styled.div`
 margin-top: 10px;
 color: white;
-${props => !props.player2Win && css`display: none`}
+${props => !props.player2Win && css`display: none`};
+flex-direction:column;
+`
+
+const BeginAgain = styled.button`
+font-family:Tron;
+font-size:20px;
+border-color: #00FFFF;
+color: #00FFFF;
+background-color: black;
+margin-bottom: 5px;
+&:hover {
+    background-color: #0AC0DC;
+}
+border-radius: 3px;
 `
 
 class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            boardSize: 35,
+            boardSize: 25,
             board: [],
             gameOver: true,
             player: [],
@@ -40,7 +55,8 @@ class App extends React.Component {
             direction2: '',
             title: true,
             player1Win: false,
-            player2Win: false
+            player2Win: false,
+            restart: false
         }
         this.tick = this.tick.bind(this);
         this.login = this.login.bind(this);
@@ -56,9 +72,10 @@ class App extends React.Component {
             player1Win: false,
             player2Win: false,
             direction: '',
-            direction2: ''
+            direction2: '',
+            restart: true
         })
-        console.log(this.state)
+        setTimeout(()=>this.setState({ restart:false }), 0)
     }
 
     componentDidMount() {
@@ -152,27 +169,27 @@ class App extends React.Component {
     }
 
     player1Victory() {
-        this.state.player.slice(1).forEach(position => this.contains(position, this.playerPosition(this.state.player)) ? 
-        this.setState({ 
-            player1Win: true,
-            gameOver: true
-        }) : null)
-        this.state.player.forEach(position => this.contains(position, this.playerPosition(this.state.player2)) ?
-         this.setState({ 
-             player1Win: true,
-            gameOver: true
-        }) : null)
-    }
-
-    player2Victory() {
         this.state.player2.slice(1).forEach(position => this.contains(position, this.playerPosition(this.state.player2)) ?
         this.setState({
             player2Win: true,
             gameOver: true
         }) : null)
+        this.state.player.forEach(position => this.contains(position, this.playerPosition(this.state.player2)) ?
+        this.setState({ 
+            player2Win: true,
+            gameOver: true
+        }) : null)
+    }
+    
+    player2Victory() {
+        this.state.player.slice(1).forEach(position => this.contains(position, this.playerPosition(this.state.player)) ? 
+        this.setState({ 
+            player1Win: true,
+            gameOver: true
+        }) : null)
         this.state.player2.forEach(position => this.contains(position, this.playerPosition(this.state.player)) ?
         this.setState({
-            player2Win: true,
+            player1Win: true,
             gameOver: true
         }) : null)
     }
@@ -212,14 +229,15 @@ class App extends React.Component {
                     board={this.state.board}
                     player={this.state.player}
                     player2={this.state.player2}
-                    gameOver={this.state.gameOver}/>
+                    gameOver={this.state.gameOver}
+                    restart={this.state.restart}/>
                 <Victory1 player1Win={this.state.player1Win}>
                     Player 1 Wins!
-                    {/* <button onClick={this.restart}>clickme</button> */}
+                    <BeginAgain onClick={this.restart}>One More?</BeginAgain>
                 </Victory1>
                 <Victory2 player2Win={this.state.player2Win}>
                     Player 2 Wins!
-                    {/* <button onClick={this.restart}>clickme</button> */}
+                    <BeginAgain onClick={this.restart}>One More?</BeginAgain>
                 </Victory2>
             </StyledApp>
         )

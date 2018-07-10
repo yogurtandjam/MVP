@@ -47,6 +47,7 @@ class Board extends React.Component {
                             player={this.props.player}
                             player2={this.props.player2}
                             gameOver={this.props.gameOver}
+                            restart={this.props.restart}
                             />)}
                     </Styledboard>
                 </Boarder>
